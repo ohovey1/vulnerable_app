@@ -2,6 +2,8 @@
 
 This project involves implementing various security protocols to defend against multiple vulnerabilities present in a Flask web application. Currently the application is vulnerable to the following:
 
+⚠️ **WARNING: This is a deliberately vulnerable web application intended for educational purposes only.** ⚠️
+
 1. SQL Injection
 2. Cross-Site Scripting (XXS)
 3. XML External Entity (XXE)
