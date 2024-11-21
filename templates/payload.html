@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div>
+        <pre>{{ content }}</pre>
+        <pre>{{html_content|safe}}</pre>
+    </div>
+{% endblock %}

